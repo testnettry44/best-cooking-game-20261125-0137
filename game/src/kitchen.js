@@ -12,11 +12,20 @@ export function nearRect(p, r, pad) {
 }
 export function nearestStation(state) {
   const p = state.player;
-  for (const c of STATIONS.crates) if (nearRect(p, c)) return { kind: 'crate', id: c.id, rect: c };
+  const candidates = [];
+  for (const c of STATIONS.crates) if (nearRect(p, c)) candidates.push({ kind: 'crate', id: c.id, rect: c });
   for (const key of ['board', 'stove', 'sauce', 'plate', 'window', 'trash']) {
-    if (nearRect(p, STATIONS[key])) return { kind: key, rect: STATIONS[key] };
+    if (nearRect(p, STATIONS[key])) candidates.push({ kind: key, rect: STATIONS[key] });
   }
-  return null;
+  if (!candidates.length) return null;
+  // Closest station centre wins (crate zones overlap at the edges).
+  let best = candidates[0], bestD = Infinity;
+  for (const c of candidates) {
+    const ctr = rectCenter(c.rect);
+    const d = Math.hypot(p.x - ctr.x, p.y - ctr.y);
+    if (d < bestD) { bestD = d; best = c; }
+  }
+  return best;
 }
 
 // E / click interaction with the nearest station.
@@ -180,14 +189,14 @@ export function update(state, dt, input) {
 
   // Cooking.
   for (const b of state.burners) {
-    if (!b.item) continue;
+    if (!b.item || b.item === 'burnt') continue; // burnt food sits still until binned
     b.progress += dt / COOK_SECONDS;
     if (Math.random() < dt * 6) { sfx.sizzleTick(); state.sizzle = 0.3; }
     if (b.progress >= 1 && b.progress - dt / COOK_SECONDS < 1) {
       sfx.cookDone();
       addPopup(state, rectCenter(STATIONS.stove).x - 30, rectCenter(STATIONS.stove).y - 70, 'Cooked — take it!', '#ffb703');
     }
-    if (b.progress >= BURN_AT) {
+    if (b.item !== 'burnt' && b.progress >= BURN_AT) {
       b.item = 'burnt'; b.progress = BURN_AT;
       state.burntCount++;
       sfx.burn();

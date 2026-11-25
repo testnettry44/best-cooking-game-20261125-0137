@@ -79,7 +79,9 @@ function drawProgressRing(ctx, x, y, r, frac, color) {
   ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
   ctx.strokeStyle = color; ctx.lineCap = 'round';
   ctx.beginPath(); ctx.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + frac * Math.PI * 2); ctx.stroke();
-  ctx.fillStyle = '#fff'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,0.65)';
+  ctx.strokeText(Math.round(frac * 100) + '%', x, y);
   ctx.fillText(Math.round(frac * 100) + '%', x, y);
   ctx.restore();
 }
@@ -115,7 +117,7 @@ export function drawKitchen(ctx, state, t) {
   ctx.font = '12px sans-serif'; ctx.fillText('hold SPACE to chop', b.x + b.w / 2, b.y + b.h - 12);
   if (state.board.item) {
     drawComponentIcon(ctx, state.board.item, b.x + b.w / 2, b.y + b.h / 2 + 6, 44);
-    drawProgressRing(ctx, b.x + b.w - 30, b.y + 34, 20, Math.min(1, state.board.progress), '#2a9d8f');
+    drawProgressRing(ctx, b.x + b.w - 26, b.y + b.h / 2 + 6, 18, Math.min(1, state.board.progress), '#2a9d8f');
   } else {
     ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.font = '13px sans-serif';
     ctx.fillText('bring chili / chicken / veg', b.x + b.w / 2, b.y + b.h / 2 + 8);
@@ -139,8 +141,7 @@ export function drawKitchen(ctx, state, t) {
       else { ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.fillText('BURNT', bx, by); }
       drawProgressRing(ctx, bx, by, 42, frac, burner.item === 'burnt' ? '#e63946' : '#ffb703');
       if (burner.progress >= 1 && burner.item !== 'burnt') {
-        ctx.fillStyle = '#ffb703'; ctx.font = 'bold 12px sans-serif';
-        ctx.fillText('READY!', bx, by - 52);
+        // The "Cooked — take it!" popup already announces this; no extra label.
       }
       if (state.sizzle > 0 && burner.progress < 1) {
         ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '16px sans-serif';
@@ -248,4 +249,4 @@ export function drawPopups(ctx, state) {
   ctx.restore();
 }
 
-export { drawPlate, drawComponentIcon, drawProgressRing, rr };
+export { drawPlate, drawProgressRing, rr };

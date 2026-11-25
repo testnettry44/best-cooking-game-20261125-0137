@@ -14,7 +14,7 @@ export function drawHUD(ctx, state) {
   ctx.fillStyle = '#ffd166'; ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   ctx.fillText('DAPUR KILAT — ORDER BOARD', 16, 26);
   ctx.fillStyle = '#fff'; ctx.font = '13px sans-serif';
-  ctx.fillText('Serve the exact dish at the window before patience runs out!', 16, 46);
+  ctx.fillText('Serve the exact dish before patience runs out!', 16, 46);
 
   // Tickets.
   state.tickets.forEach((t, i) => {
@@ -30,8 +30,8 @@ export function drawHUD(ctx, state) {
     ctx.fillStyle = '#3a2417'; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'left';
     ctx.fillText(recipe.name, x + 10, y + 22);
     ctx.font = '12px sans-serif'; ctx.fillStyle = '#8a5a3b';
-    ctx.fillText(recipe.price + ' coins', x + 10, y + 38);
-    recipe.needs.forEach((id, j) => drawComponentIcon(ctx, id, x + 26 + j * 44, y + 62, 30));
+    ctx.fillText(recipe.price + ' coins', x + 10, y + 34);
+    recipe.needs.forEach((id, j) => drawComponentIcon(ctx, id, x + 26 + j * 44, y + 64, 26));
     // Patience bar.
     ctx.fillStyle = '#ddd'; ctx.fillRect(x + 10, y + TICKET_H - 12, TICKET_W - 20, 7);
     ctx.fillStyle = frac > 0.5 ? '#2a9d8f' : frac > 0.25 ? '#ffb703' : '#e63946';

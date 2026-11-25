@@ -49,6 +49,9 @@ export function makePlate() { return { kind: 'plate', components: [] }; }
 export function makeItem(id) { return { kind: 'item', id }; }
 export function itemLabel(item) {
   if (!item) return 'empty hands';
-  if (item.kind === 'plate') return 'Plate [' + item.components.map((c) => COMPONENTS[c].label).join(', ') + ']';
+  if (item.kind === 'plate') {
+    const SHORT = { cooked_rice: 'Rice', fried_egg: 'Egg', chopped_chili: 'Chili', cooked_noodles: 'Noodles', chopped_veg: 'Veg', chopped_chicken: 'Chicken', cooked_chicken: 'Chicken', sauce: 'Sauce' };
+    return 'Plate [' + item.components.map((c) => SHORT[c] || c).join(', ') + ']';
+  }
   return COMPONENTS[item.id] ? COMPONENTS[item.id].label : item.id;
 }

@@ -25,7 +25,7 @@ export function stage(state, name) {
     state.counterPlate = plate;
     // Ingredients waiting on the board area: chopped chili ready in hand.
     state.held = makeItem('chopped_chili');
-    placePlayer(state, 'plate', 0, 10);
+    placePlayer(state, 'board', 120, 36);
     // A burner cooking noodles.
     state.burners[0].item = 'noodles'; state.burners[0].progress = 0.45;
     return 'cover staged';
@@ -33,7 +33,7 @@ export function stage(state, name) {
   if (name === 'chop') {
     state.time = 12; state.timeLeft = 168;
     state.tickets = []; spawnTicket(state);
-    state.board.item = 'chicken'; state.board.progress = 0.55;
+    state.board.item = 'chicken'; state.board.progress = 0.7;
     state.held = null;
     placePlayer(state, 'board', 0, 6);
     return 'chop staged';
